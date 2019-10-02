@@ -1,2 +1,9 @@
+# Private configuration
 *.psk
 authorized_keys
+
+# Build artifacts
+mirrorlist
+*.tar.gz
+*.tar.gz.sig
+*.iso
