@@ -15,3 +15,6 @@ sed -i -e '/\/etc\/pacman\.d\/mirrorlist/d' \
     -e 's/ choose-mirror.service//' \
     -e '/systemctl enable/a systemctl enable iwd.service systemd-networkd.service systemd-resolved.service systemd-timesyncd.service sshd.service' \
     archlive/airootfs/root/customize_airootfs.sh
+
+# Add install script
+install -Dm755 -t archlive/airootfs/root install.sh
