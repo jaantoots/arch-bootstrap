@@ -12,5 +12,6 @@ install -Dm644 -t archlive/airootfs/root/.ssh authorized_keys
 
 ln -sf ../run/systemd/resolve/stub-resolv.conf archlive/airootfs/etc/resolv.conf
 sed -i -e '/\/etc\/pacman\.d\/mirrorlist/d' \
-    -e 's/ choose-mirror.service/ iwd.service systemd-networkd.service systemd-resolved.service sshd.service/' \
+    -e 's/ choose-mirror.service//' \
+    -e '/systemctl enable/a systemctl enable iwd.service systemd-networkd.service systemd-resolved.service systemd-timesyncd.service sshd.service' \
     archlive/airootfs/root/customize_airootfs.sh
