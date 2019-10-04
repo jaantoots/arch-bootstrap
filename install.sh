@@ -6,6 +6,10 @@ mnt="$1"
 hostname="$2"
 cmdline="$3" # cryptdevice=UUID=$uuid:root:allow-discards root=/dev/mapper/root rw
 
+# Set up local mirrorlist
+cat mirrorlist /etc/pacman.d/mirrorlist >/etc/pacman.d/mirrorlist.new
+mv /etc/pacman.d/mirrorlist.new /etc/pacman.d/mirrorlist
+
 # Basic system
 pacstrap "$mnt" base systemd-resolvconf intel-ucode iwd openssh
 genfstab -U "$mnt" >> "$mnt/etc/fstab"
