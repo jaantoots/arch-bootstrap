@@ -11,11 +11,12 @@ cat mirrorlist /etc/pacman.d/mirrorlist >/etc/pacman.d/mirrorlist.new
 mv /etc/pacman.d/mirrorlist.new /etc/pacman.d/mirrorlist
 
 # Basic system
-pacstrap "$mnt" base systemd-resolvconf intel-ucode iwd openssh
+pacstrap "$mnt" base systemd-resolvconf intel-ucode iwd openssh python
 genfstab -U "$mnt" >> "$mnt/etc/fstab"
 echo "$hostname" > "$mnt/etc/hostname"
 
 # Configure network and access
+install -Dm644 -t "$mnt/etc" /etc/vconsole.conf
 install -Dm644 -t "$mnt/etc/systemd/network" /etc/systemd/network/*
 install -Dm644 -t "$mnt/etc/iwd" /etc/iwd/main.conf
 install -Dm600 -t "$mnt/var/lib/iwd" /var/lib/iwd/*.psk
@@ -40,6 +41,7 @@ install -Dm755 /dev/stdin "$mnt/root/init.sh" <<EOF
 set -eux
 
 # Locale
+echo "LANG=en_GB.UTF-8" >/etc/locale.conf
 sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 sed -i 's/#\(en_GB\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
