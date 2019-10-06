@@ -11,7 +11,20 @@ cat mirrorlist /etc/pacman.d/mirrorlist >/etc/pacman.d/mirrorlist.new
 mv /etc/pacman.d/mirrorlist.new /etc/pacman.d/mirrorlist
 
 # Basic system
-pacstrap "$mnt" base systemd-resolvconf intel-ucode iwd openssh python
+pkgs=(
+    base
+    intel-ucode
+    iwd
+    linux
+    linux-firmware
+    lvm2
+    mdadm
+    openssh
+    python
+    systemd-resolvconf
+    vi
+)
+pacstrap "$mnt" "${pkgs[@]}"
 genfstab -U "$mnt" >> "$mnt/etc/fstab"
 echo "$hostname" > "$mnt/etc/hostname"
 
