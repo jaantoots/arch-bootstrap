@@ -25,8 +25,16 @@ pkgs=(
     vi
 )
 pacstrap "$mnt" "${pkgs[@]}"
-genfstab -U "$mnt" | sed -E 's/[\t ]+/ /g' >> "$mnt/etc/fstab"
-echo "$hostname" > "$mnt/etc/hostname"
+genfstab -U "$mnt" | sed -E 's/[\t ]+/ /g' >>"$mnt/etc/fstab"
+echo "$hostname" >"$mnt/etc/hostname"
+cat >>/etc/hosts <<EOF
+
+127.0.0.1 localhost.localdomain localhost
+127.0.1.1 $hostname.localdomain $hostname
+
+::1 localhost.localdomain localhost
+
+EOF
 
 # Configure network and access
 install -Dm644 -t "$mnt/etc" /etc/vconsole.conf
