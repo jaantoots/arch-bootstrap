@@ -25,7 +25,7 @@ pkgs=(
     vi
 )
 pacstrap "$mnt" "${pkgs[@]}"
-genfstab -U "$mnt" >> "$mnt/etc/fstab"
+genfstab -U "$mnt" | sed -E 's/[\t ]+/ /g' >> "$mnt/etc/fstab"
 echo "$hostname" > "$mnt/etc/hostname"
 
 # Configure network and access
