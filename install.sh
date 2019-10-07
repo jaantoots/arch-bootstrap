@@ -11,11 +11,14 @@ cat mirrorlist /etc/pacman.d/mirrorlist >/etc/pacman.d/mirrorlist.new
 mv /etc/pacman.d/mirrorlist.new /etc/pacman.d/mirrorlist
 
 # Basic system
+kernels=(
+    linux
+    linux-lts
+)
 pkgs=(
     base
     intel-ucode
     iwd
-    linux
     linux-firmware
     lvm2
     mdadm
@@ -24,7 +27,7 @@ pkgs=(
     systemd-resolvconf
     vi
 )
-pacstrap "$mnt" "${pkgs[@]}"
+pacstrap "$mnt" "${pkgs[@]}" "${kernels[@]}"
 genfstab -U "$mnt" | sed -E 's/[\t ]+/ /g' >>"$mnt/etc/fstab"
 echo "$hostname" >"$mnt/etc/hostname"
 cat >>/etc/hosts <<EOF
@@ -47,13 +50,15 @@ ln -sf ../run/systemd/resolve/stub-resolv.conf "$mnt/etc/resolv.conf"
 
 # Initramfs configuration and boot loader entry
 sed -i '/^HOOKS/s/\(filesystems\)/consolefont encrypt lvm2 \1/' "$mnt/etc/mkinitcpio.conf"
-install -Dm644 /dev/stdin "$mnt/boot/loader/entries/arch.conf" <<EOF
-title	Arch Linux
-linux	/vmlinuz-linux
+for kernel in "${kernels[@]}"; do
+    install -Dm644 /dev/stdin "$mnt/boot/loader/entries/arch${kernel#linux}.conf" <<-EOF
+title	Arch Linux ($kernel)
+linux	/vmlinuz-$kernel
 initrd	/intel-ucode.img
-initrd	/initramfs-linux.img
+initrd	/initramfs-$kernel.img
 options	$cmdline
 EOF
+done
 
 # Create init script
 install -Dm755 /dev/stdin "$mnt/root/init.sh" <<EOF
