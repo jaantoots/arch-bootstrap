@@ -1,0 +1,6 @@
+[Match]
+Type=wlan
+
+[Link]
+NamePolicy=keep kernel database onboard slot path
+MACAddressPolicy=random

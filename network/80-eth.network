@@ -4,3 +4,6 @@ Name=en*
 [Network]
 DHCP=yes
 IPv6PrivacyExtensions=prefer-public
+
+[DHCP]
+UseDomains=yes
