@@ -1,6 +1,0 @@
-[Match]
-Type=wlan
-
-[Network]
-DHCP=yes
-IPv6PrivacyExtensions=prefer-public

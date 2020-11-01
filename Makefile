@@ -1,15 +1,24 @@
 ARCH ?= x86_64
+ARCHISO ?= archlinux-$(shell date '+%Y.%m.%d')-$(ARCH).iso
 
 mirrorlist:
 	reflector --verbose --sort rate --score 64 --fastest 16 > $@
 
-archlive: mirrorlist
-	./archlive.sh
+archlive:
+	cp -av /usr/share/archiso/configs/releng/ $@
+	install -Dm644 -t $@/airootfs/etc vconsole.conf
+	install -Dm600 -t $@/airootfs/var/lib/iwd iwd/*.psk
+	install -Dm700 -d $@/airootfs/root/.ssh
+	install -Dm600 -t $@/airootfs/root/.ssh authorized_keys
+	ln -s /usr/lib/systemd/system/sshd.service $@/airootfs/etc/systemd/system/multi-user.target.wants/
+	# Add install script
+	install -Dm755 -t $@/airootfs/root install.sh
+
+archlinux-%.iso: archlive
+	mkarchiso -v -w /tmp/mkarchiso-work -o . $<
 
 .PHONY: build
-build: archlive
-	cd $< && ./build.sh -v
-	mv -v $</out/archlinux-*-$(ARCH).iso .
+build: $(ARCHISO)
 
 .PHONY: clean
 clean:
